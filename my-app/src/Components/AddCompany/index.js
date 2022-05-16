@@ -49,11 +49,11 @@ function AddCompany() {
         onCancel={handleCancel}
         bodyStyle={{ paddingTop: "0px" }}
         closable={true}
-        // closeIcon={
-        //     <span role="img" aria-label="close" class="anticon anticon-close ant-modal-close-icon">
-        //         <CloseIcon />
-        //     </span>    
-        //     }
+        closeIcon={
+           
+                <image src={email} alt="" />
+              
+            }
         width={648}
         footer={[
           <Col className="container" key={key}>
