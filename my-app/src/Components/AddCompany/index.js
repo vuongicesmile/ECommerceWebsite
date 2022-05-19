@@ -72,25 +72,28 @@ function AddCompany() {
   ]);
 
   const handleActive = (flag) => {
+    //console.log(flag);
     let activeItem = { id: '', flag: null, name: '', label: '', className: '' };
     activeItem = { ...flag, className: 'currency-content p-2 selected' };
-
+    //console.log(activeItem);
     let newArray = [];
     listFlag.map((item) => {
       if (item.id == activeItem.id) {
         item.className = 'currency-content p-2 selected';
         newArray.push(item);
+        console.log(newArray);
       } else {
         item.className = 'currency-content p-2';
         newArray.push(item);
       }
     });
     setListFlag(newArray);
+    console.log(newArray);
   };
 
-  useEffect(() => {
-    //console.log(listFlag);
-  }, [listFlag]);
+  // useEffect(() => {
+  //   //console.log(listFlag);
+  // }, [listFlag]);
 
   const showModal = () => {
     setpopupVisible(true);
@@ -118,7 +121,7 @@ function AddCompany() {
         onCancel={handleCancel}
         bodyStyle={{ paddingTop: "0px" }}
         closable={true}
-        closeIcon={<image src={email} alt="" />}
+        closeIcon={<img src={email} alt="" />}
         width={648}
         footer={[
           <Col className="container" key={key}>
