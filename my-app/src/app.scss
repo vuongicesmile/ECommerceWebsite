@@ -5,7 +5,16 @@
   height: 100vh;
 
   .app-header {
+    width: calc(100% - 2px);
     height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 1px 2px 2px #00000033;
+  }
+
+  .appMenu {
+    border: none;
   }
 
   .page-content {
@@ -19,5 +28,23 @@
   .app-footer {
     height: 60px;
     background-color: black;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+   
+  }
+  .shoppingcarticon {
+    font-size: 30px;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  .itemCardImage {
+    height: 150px;
+    object-fit: scale-down;
+  }
+  .itemCardBadge , .itemCard {
+    margin: 8px;
   }
 }
+
