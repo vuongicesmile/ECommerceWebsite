@@ -1,0 +1,56 @@
+.divTable {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border: 1px solid rgba(62, 120, 178, 0.2);
+}
+.tablecomponent {
+  position: relative;
+  width: max-content;
+  min-width: 100%;
+  height: 100%;
+  border: 1px solid rgba(62, 120, 178, 0.2);
+  border-collapse: separate;
+  border-spacing: 0;
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: max-content;
+    text-align: center;
+    background: white;
+  }
+  tfoot {
+    td {
+      width: max-content;
+    }
+    position: sticky;
+    bottom: 0;
+    background: white;
+  }
+  th,
+  td {
+    padding: 5px;
+    border-right: 1px solid rgba(62, 120, 178, 0.2);
+    border-right: 1px solid rgba(62, 120, 178, 0.2);
+    border-bottom: 1px solid rgba(62, 120, 178, 0.2);
+  }
+  tbody {
+    tr:hover {
+      background: #e2f3ff;
+    }
+  }
+  .nodata {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: rgb(197, 195, 195);
+    font-size: 25px;
+    img {
+      width: 50px;
+      opacity: 0.2;
+    }
+  }
+}

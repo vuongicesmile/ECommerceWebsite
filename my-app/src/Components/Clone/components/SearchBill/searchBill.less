@@ -1,0 +1,163 @@
+.search-bill-component-container {
+  user-select: none;
+  .search-input {
+    position: relative;
+    .normal {
+      border: 1px solid rgba(0, 0, 0, 0.3) !important;
+    }
+    .dropdown-search-bill-container {
+      position: absolute;
+      z-index: 999;
+      width: 100%;
+      padding: 0 10px;
+      overflow: auto;
+      background-color: #ffffff;
+      border: 0.5px solid #b2b2b2;
+      border-radius: 0 0 5px 5px;
+    }
+    .search-content {
+      width: inherit;
+      height: max-content;
+    }
+  }
+  .search-bill-label > span {
+    display: flex;
+    align-items: center;
+  }
+  .search-select-radio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 100px;
+    max-width: 100%;
+    padding: 0 10px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    .ant-radio-button-wrapper {
+      min-width: fit-content;
+      text-align: center;
+    }
+  }
+  .content-search-container {
+    position: absolute;
+    left: 47%;
+    z-index: 999;
+    width: fit-content;
+    height: auto;
+    padding: 10px;
+
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    .ant-radio-group {
+      display: flex;
+      justify-content: center;
+      width: fit-content;
+      overflow: hidden;
+      border: 1px solid #b2b2b2;
+      border-radius: 10px;
+      .ant-radio-button-wrapper {
+        border: none;
+      }
+      .ant-radio-button-checked {
+        border-top: 1px solid #1890ff;
+        border-bottom: 1px solid #1890ff;
+      }
+    }
+    .content-old-booking {
+      width: fit-content;
+      height: fit-content;
+    }
+  }
+
+  .border-active {
+    border-color: rgba(85, 174, 198, 0.8);
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    transition: box-shadow 0.5s;
+  }
+  .hide {
+    width: 0 !important;
+    height: 0 !important;
+    visibility: hidden;
+    transition: 0.3s;
+  }
+  .display {
+    visibility: visible;
+    transition: 0.3s;
+  }
+  .display-old-booking {
+    visibility: visible;
+    transition: 0.3s;
+  }
+  .bkk-line {
+    padding: 0 10px;
+    border-radius: 10px;
+    &:hover {
+      color: white;
+      background-color: #4086f7;
+    }
+  }
+  .room-guest-line {
+    padding: 0 10px;
+    border-radius: 10px;
+    &:hover {
+      color: white;
+      background-color: #4086f7;
+    }
+  }
+
+  //responsive
+  @media only screen and (max-width: 1599px) {
+    .content-search-container {
+      left: 46vw;
+    }
+  }
+  @media only screen and (max-width: 1135px) {
+    .content-search-container {
+      left: 40vw;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    .content-search-container {
+      left: 36vw;
+    }
+  }
+  @media only screen and (max-width: 991px) {
+    .content-search-container {
+      left: 45vw;
+    }
+    .display-old-booking {
+      transform: translateX(-18vw);
+    }
+  }
+  @media only screen and (max-width: 840px) {
+    .content-search-container {
+      left: 37vw;
+    }
+  }
+  @media only screen and (max-width: 770px) {
+    .content-search-container {
+      left: 36vw;
+    }
+    .display-old-booking {
+      transform: translateX(-22vw);
+    }
+  }
+  @media only screen and (max-width: 721px) {
+    .display-old-booking {
+      transform: translateX(-28vw);
+    }
+  }
+  @media only screen and (max-width: 671px) {
+    .display-old-booking {
+      transform: translateX(-36vw);
+    }
+  }
+  @media only screen and (max-width: 630px) {
+    .content-search-container {
+      left: 30vw;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect y="0.5" width="30" height="30" fill="url(#paint0_angular_1767_7303)"/>
+<rect x="0.5" y="1" width="29" height="29" stroke="black" stroke-opacity="0.3"/>
+<defs>
+<radialGradient id="paint0_angular_1767_7303" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(15 15.5) rotate(90) scale(15)">
+<stop offset="0.0018786" stop-color="#C61F1F"/>
+<stop offset="0.109321" stop-color="#C58334"/>
+<stop offset="0.204603" stop-color="#C5B843"/>
+<stop offset="0.311857" stop-color="#7DC551"/>
+<stop offset="0.414229" stop-color="#26CE7D"/>
+<stop offset="0.535583" stop-color="#40D2D2"/>
+<stop offset="0.658199" stop-color="#3764D6"/>
+<stop offset="0.7719" stop-color="#5922CE"/>
+<stop offset="0.883821" stop-color="#A235C8"/>
+<stop offset="1" stop-color="#D629A5"/>
+</radialGradient>
+</defs>
+</svg>

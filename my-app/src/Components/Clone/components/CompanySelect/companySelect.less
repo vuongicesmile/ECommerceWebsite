@@ -1,0 +1,87 @@
+@import '~/src/e2e/variables.less';
+
+.search-company-container {
+  font-size: 14px;
+  .img-container {
+    display: flex;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+  }
+
+  .dropdown-container {
+    z-index: 13;
+    width: inherit;
+    // max-height: 300px;
+    padding: 20px;
+    overflow: auto;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0px 0px 5px 5px;
+  }
+
+  .search-company-input {
+    width: 100%;
+    // border-top: 1px solid rgba(0, 0, 0, 0.3);
+    // border-right: none;
+    // border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    // border-left: none;
+    // border-radius: 10px 0 0 0;
+    // &:focus-within {
+    //   border-top: 1px solid rgba(0, 0, 0, 0.3);
+    //   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    //   border-radius: 10px 0 0 0;
+    //   box-shadow: none;
+    // }
+    border: none;
+  }
+
+  .company-select-show {
+    padding-left: 2px;
+  }
+
+  .company-show {
+    height: 30px;
+    border: 1px solid rgba(64, 66, 67, 0.2);
+    border-radius: 5px;
+    &:focus-within {
+      border-color: rgba(64, 66, 67, 0.2);
+      box-shadow: none;
+    }
+  }
+
+  .read-only-company {
+    background: #efefef !important;
+    cursor: not-allowed !important;
+  }
+
+  .company-select-required {
+    background-color: @required-color !important;
+  }
+
+  .datepicker-container {
+    height: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+  }
+
+  .company-container {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    .search-company-item {
+      border-radius: 5px;
+      &:hover {
+        color: white;
+        background-color: #5cbeff;
+      }
+    }
+  }
+
+  .highlight-class {
+    padding: 0;
+    color: #ce921e;
+    background-color: transparent;
+  }
+}

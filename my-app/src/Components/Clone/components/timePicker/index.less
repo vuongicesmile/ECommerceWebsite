@@ -1,0 +1,91 @@
+.timePicker-component {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: max-content;
+  height: 30px;
+  padding: 10px;
+  background-color: white;
+  border: 2px;
+  border: 0.5px solid rgba(64, 66, 67, 0.2);
+  border-radius: 5px;
+
+  //  border: 1px solid #3e5c76;
+  input {
+    width: 22px;
+    background: transparent;
+    border: none;
+  }
+}
+
+.onSelectDate {
+  color: white;
+  background: #4086f7;
+  pointer-events: none;
+}
+
+.onDisable {
+  background: rgb(221, 221, 221);
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.timepickerDropComponent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: none;
+  width: max-content;
+  height: 200px;
+  background: white;
+  box-shadow: 0px 0px 13px 3px #82afbb;
+
+  .dropitemTime:nth-child(1) {
+    border-right: 1px solid rgba(160, 195, 228, 0.589);
+  }
+
+  .dropitemtimeItem {
+    &:hover {
+      background: #bbcce9;
+    }
+
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .dropitemTime {
+    height: 100%;
+    overflow: auto;
+    scroll-behavior: smooth;
+  }
+}
+
+.timepickerRange {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: max-content;
+  padding-right: 10px;
+  background-color: white;
+  border: 0.5px solid rgba(64, 66, 67, 0.2);
+  border-radius: 10px;
+
+  .timepickerRange-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .timePicker-component {
+    .clockHH {
+      display: none;
+    }
+
+    border: none;
+  }
+}

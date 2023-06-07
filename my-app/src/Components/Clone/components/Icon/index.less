@@ -1,0 +1,87 @@
+.clockHH{
+    height: 25px;
+    width: 25px;
+    background: transparent;
+    border: 3px solid #81c0f3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .clockHH1{
+        position: absolute;
+        height: 19px;
+        &::after{
+        position: absolute;
+        height:2px;
+        content: '';
+        width: 2px;
+        background: rgb(83, 153, 170)
+        }
+        &::before{
+            position: absolute;
+            height:2px;
+            bottom: 0;
+            content: '';
+            width: 2px;
+            background: rgb(83, 153, 170)
+            }
+        width: 1px;
+        
+    }
+    .clockHH2{
+        position: absolute;
+        height: 19px;
+        transform: rotate(90deg);
+        &::after{
+        position: absolute;
+        height:2px;
+        content: '';
+        width: 2px;
+        background: rgb(83, 153, 170)
+        }
+        &::before{
+            position: absolute;
+            height:2px;
+            bottom: 0;
+            content: '';
+            width: 2px;
+            background: rgb(83, 153, 170);
+            }
+        width: 1px;
+        
+    }
+    .clockHH3{
+        position: absolute;
+        height: 15px;
+        animation: clocktimehh 5s linear infinite;
+        &::after{
+        position: absolute;
+        height:8px;
+        content: '';
+        width: 1px;
+        background: rgb(83, 153, 170)
+        }
+        width: 1px;   
+    }
+    .clockHH4{
+        position: absolute;
+        height: 12px;
+        animation: clocktimehh 300s linear infinite;
+        &::after{
+        position: absolute;
+        height:6px;
+        content: '';
+        width: 1px;
+        background: rgb(83, 153, 170)
+        }
+        width: 1px;   
+    }
+}
+@keyframes clocktimehh {
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}

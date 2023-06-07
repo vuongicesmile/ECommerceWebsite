@@ -1,0 +1,957 @@
+import { set, map, unset, filter, forInRight, values } from 'lodash';
+import React, { useState, useEffect, useMemo, useCallback, useRef, useLayoutEffect } from 'react';
+import { input } from '../Input';
+import { useIntl, useModel } from 'umi';
+import { Switch } from '@/components/Switch';
+import { buttonList } from '@/components/Button';
+import moment from 'moment';
+import { notification } from '@/components/Notification';
+import { select } from '../Select';
+import { DatePicker, TimePicker, Slider } from 'antd';
+import LoadingLogo from '../LoadingLogo';
+import { useFetch } from '../Fetch/useFetch';
+import { formatNumber } from '@/e2e/extensionMethod';
+import { inputTable } from './inputTable';
+
+import './table.less';
+
+const Table = ({
+  selectMultiRoomInhouse,
+  uploadTotal,
+  clearRoom,
+  useGetRoomDetails,
+  roomDetails,
+  selectMultiRoom,
+  numberRoom,
+  update,
+  showAll,
+  search,
+  abc,
+  edit,
+  bookingNumber,
+  column,
+  onClearRoom,
+}) => {
+  const intl = useIntl();
+  const { updateSameDay } = useModel('transferdata');
+  const numberRef = useRef();
+  const refcheckAll = useRef([]);
+  const refInhouse = useRef([]);
+  const refInhouseColor = useRef([]);
+  const { rateCode, specialRequest } = useModel('bookingdata');
+  const refCheckin = useRef([null]);
+  const refCheckinColor = useRef([null]);
+  const [data, setData] = useState([]);
+  const [checkin, setCheckinall] = useState(0);
+  const [roomcode, setRoomcode] = useState({
+    roomcode: [],
+    roomcodeGroup: {
+      checkin: [],
+      inHouse: [],
+    },
+  });
+  const [groupbooking, setGroupbooking] = useState([
+    'Checkin',
+    '1',
+    'Inhouse',
+    '1',
+    'Checkout',
+    '1',
+  ]);
+  const { service } = useModel('hoteldata');
+  const columnService = [
+    {
+      title: intl.formatMessage({ id: 'pages.booking.table.ngay' }),
+      dataIndex: 'ngay',
+      key: 'ngay',
+      render: (a, b, c) => <>{moment(c).format('DD-MM-YYYY')}</>,
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.booking.table.service' }),
+      dataIndex: 'maDichVu',
+      key: 'maDichVu',
+      render: (a, b, c) => (
+        <>
+          {service && service.find((i) => i.ma == c)
+            ? service.find((i) => i.ma == c).dichVu
+            : undefined}
+        </>
+      ),
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.booking.table.RoomRate' }),
+      dataIndex: 'maGiaPhong',
+      key: 'maGiaPhong',
+      render: (a, b, c, d) => (
+        <>
+          {a.maDichVu == 'RM' ? (
+            <select.group
+              onChange={(e) => {
+                a.maGiaPhong = e;
+                updateServiceSelect(a, b);
+              }}
+              value={a.maGiaPhong}
+              width={'200px'}
+              placeholder="Rate Code"
+            >
+              {rateCode?.map((i, index) => (
+                <select.option key={index} value={i.ma}>
+                  {i.ma}
+                </select.option>
+              ))}
+            </select.group>
+          ) : undefined}
+        </>
+      ),
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.booking.table.soluong' }),
+      dataIndex: 'soLuong',
+      key: 'soLuong',
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.booking.table.price' }),
+      dataIndex: 'thanhTien',
+      key: 'thanhTien',
+    },
+    {
+      title: 'GIT/FIT',
+      dataIndex: 'isPhong',
+      key: 'isPhong',
+      render: (a, b, c, d) => {
+        return (
+          <>
+            <Switch
+              onClick={(value) => {
+                a.isPhong = value ? 1 : 0;
+                updateServiceSelect(a, b);
+                // setTimeout(() => {
+                //   update();
+                // }, 400);
+              }}
+              value={c == 1 ? true : false}
+              title1={'Git'}
+              title2={'FIT'}
+            ></Switch>
+          </>
+        );
+      },
+    },
+  ];
+  const [active, setActive] = useState([]);
+
+  useEffect(() => {
+    let arr = [];
+    let arr2 = [];
+    if (roomDetails) {
+      roomDetails?.map((i, index) => {
+        arr2.push({
+          ...i,
+          code: index,
+        });
+
+        i.service?.map((j) => {
+          j.editPrice = false;
+          j.editNumber = false;
+        });
+
+        arr.push({
+          active: index == numberRef.current ? true : false,
+          code: index,
+          onCancel: false,
+        });
+      });
+      setActive(arr);
+    }
+
+    setData(
+      search != '' ? arr2.filter((i) => (i.phong ? i.phong.includes(search) : undefined)) : arr2,
+    );
+  }, [roomDetails, abc, search]);
+
+  // const updateServiceRoomRate = (e) => {
+  //   useFetch(
+  //     '/api/Booking/UpdateServicePhong',
+  //     'post',
+  //     'application/json',
+  //     JSON.stringify({
+  //       ...e,
+  //       soLuong: parseFloat(e.soLuong),
+  //       thanhTien: parseFloat(e.thanhTien),
+  //       maHDDichVu: e.maHDDichVu ? parseFloat(e.maHDDichVu) : 0,
+  //       maChiTiet: e.maChiTiet ? parseFloat(e.maChiTiet) : 0,
+  //     }),
+  //     (res) => {
+  //       if (res.success == 1) {
+  //         notification.success(intl.formatMessage({ id: res.mess }));
+  //       } else {
+  //         notification.warning(intl.formatMessage({ id: res.mess }), res.mess);
+  //       }
+  //     },
+  //     (error) => console.log(error),
+  //   );
+  // };
+  const updateService = (e, index, c) => {
+    useFetch(
+      '/api/Booking/UpdateServicePhong',
+      'post',
+      'application/json',
+      JSON.stringify({
+        ...e,
+        soLuong: e.soLuong,
+        thanhTien: e.thanhTien,
+        maHDDichVu: e.maHDDichVu ? parseFloat(e.maHDDichVu) : 0,
+        maChiTiet: e.maChiTiet ? parseFloat(e.maChiTiet) : 0,
+      }),
+      (res) => {
+        if (res.success == 1) {
+          notification.success(intl.formatMessage({ id: res.mess }));
+          data[index].service[e.index] = e;
+          uploadTotal();
+        } else {
+          notification.warning(intl.formatMessage({ id: res.mess }), res.mess);
+        }
+      },
+      (error) => console.log(error),
+    );
+  };
+  const updateServiceSelect = (e, index) => {
+    useFetch(
+      '/api/Booking/UpdateServicePhong',
+      'post',
+      'application/json',
+      JSON.stringify({
+        ...e,
+        soLuong: e.soLuong,
+        thanhTien: e.thanhTien,
+        maHDDichVu: e.maHDDichVu ? parseFloat(e.maHDDichVu) : 0,
+        maChiTiet: e.maChiTiet ? parseFloat(e.maChiTiet) : 0,
+      }),
+      (res) => {
+        if (res.success == 1) {
+          notification.success(intl.formatMessage({ id: res.mess }));
+          data[index].service[e.index] = e;
+        } else {
+          notification.warning(intl.formatMessage({ id: res.mess }), res.mess);
+          update();
+        }
+      },
+      (error) => console.log(error),
+    );
+  };
+  // const changeType = (a, b, c, d) => {
+  //   let ab = b[c];
+  //   let x = roomDetails.findIndex((i) => i.ma == b?.maPhongThue);
+  //   let obj = document.querySelector(`.${a}`);
+  //   if (obj.classList.contains('editTable')) {
+  //     obj.classList.remove('editTable');
+  //     obj.innerHTML = `
+  //       <input class="input${a}" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"  value=${b[c]} ></input>
+  //     `;
+  //     setTimeout(() => {
+  //       document.querySelector(`.input${a}`).focus();
+  //       let length = document.querySelector(`.input${a}`).value?.length;
+  //       document.querySelector(`.input${a}`).setSelectionRange(length, length);
+  //     }, 200);
+  //     document.querySelector(`.input${a}`).addEventListener('keyup', (e) => {
+  //       roomDetails[x].service[d - 1][c] = e.target.value;
+  //     });
+  //     document.querySelector(`.input${a}`).addEventListener('focusout', (e) => {
+  //       updateService(roomDetails[x].service[d - 1], `${a}`, roomDetails[x].service[d - 1][c], {
+  //         a: x,
+  //         b: d,
+  //         c: c,
+  //         d: ab,
+  //       });
+  //     });
+  //   }
+  // };
+
+  useEffect(() => {
+    updateSameDay();
+    edit == 1 ? setData([]) : undefined;
+    edit != 0 ? setCheckinall(0) : undefined;
+  }, [edit]);
+
+  useEffect(() => {
+    refCheckin.current.map((i, index) => {
+      refCheckin.current[index] ? (refCheckin.current[index].checked = false) : undefined;
+    });
+    refInhouse.current.map((i, index) => {
+      refInhouse.current[index] ? (refInhouse.current[index].checked = false) : undefined;
+    });
+    roomcode.roomcode = [];
+    oncheck();
+    let format = [...data];
+    format?.map((i) => {
+      i.ngayCheckout = moment(i.ngayCheckout).format('YYYY-MM-DD');
+      i.ngayDen = moment(i.ngayDen).format('YYYY-MM-DD');
+    });
+    useGetRoomDetails(data);
+    let arr = document.querySelectorAll(`.serviceOpen${bookingNumber}`);
+    for (let i = 0; i < arr?.length; i++) {
+      arr[i].style.height = '0px';
+    }
+    refCheckin.current?.map((i) => {
+      i ? (i.checked = false) : undefined;
+    });
+    setCheckinall(0);
+    updateSameDay();
+  }, [data]);
+
+  // useEffect(() => {
+  //   refCheckin.current = [];
+  //   refInhouse.current = [];
+  //   refcheckAll.current = [];
+
+  //   let arr = [];
+  //   if (roomDetails) {
+  //     roomDetails?.map((i, index) => {
+  //       i.service?.map((j) => {
+  //         j.editPrice = false;
+  //         j.editNumber = false;
+  //       });
+  //       let formData = new FormData();
+  //       formData.append('maPhongThue', i.ma);
+  //       useFetch(
+  //         '/api/Booking/GetPhongThueSpecialRequest',
+  //         'POST',
+  //         null,
+  //         formData,
+  //         (res) => {
+  //           if (res.length > 0) {
+  //             let special = '';
+  //             res.map((item) => {
+  //               let aa = specialRequest.find((i) => i.id == item.id).specialRequest;
+  //               special == '' ? (special = aa) : (special += ', ' + aa);
+  //             });
+
+  //             arr.push({
+  //               ...i,
+  //               code: index,
+  //               specialRequest: special,
+  //             });
+  //           } else {
+  //             arr.push({
+  //               ...i,
+  //               code: index,
+  //               specialRequest: '',
+  //             });
+  //           }
+  //         },
+  //         (err) => {
+  //           console.log(err);
+  //         },
+  //       );
+  //     });
+  //   }
+  //   if (search != '') {
+  //     roomDetails
+  //       ? setData(arr.filter((i) => (i.phong ? i.phong.includes(search) : undefined)))
+  //       : roomDetails;
+  //   } else {
+  //     setData(arr);
+  //   }
+  // }, [search]);
+
+  const oncheck = () => {
+    clearRoom();
+    selectMultiRoom(roomcode.roomcode.filter((i) => i != undefined));
+    let arrDay = [];
+    let sameDay = { ngayDen: '', ngayCheckout: '' };
+    onClearRoom ? onClearRoom() : undefined;
+    if (refCheckin.current[0] || refInhouse.current[0]) {
+      let a = 1;
+      let b = 1;
+      refCheckin.current?.map((i, index) => {
+        if (i && i.checked == true) {
+          refCheckinColor.current[index]?.classList.add('onSelect');
+        } else {
+          refCheckinColor.current[index]?.classList.remove('onSelect');
+        }
+        i ? (i.checked ? a++ : undefined) : undefined;
+        data?.length > 0 && i
+          ? i.checked
+            ? arrDay.push({
+                ngayDen: data[index].ngayDen,
+                ngayCheckout: data[index].ngayCheckout,
+              })
+            : undefined
+          : undefined;
+      });
+      refInhouse.current?.map((i, index) => {
+        if (i && i.checked == true) {
+          refInhouseColor.current[index]?.classList.add('onSelect');
+        } else {
+          refInhouseColor.current[index]?.classList.remove('onSelect');
+        }
+        i ? (i.checked ? b++ : undefined) : undefined;
+      });
+
+      if (refcheckAll.current[0]) {
+        if (a > 1) {
+          if (a == refCheckin.current.filter((i) => i != null)?.length + 1) {
+            refcheckAll.current[0].checked = true;
+            refcheckAll.current[0].classList.remove('checkboxall');
+          } else {
+            refcheckAll.current[0].checked = true;
+            refcheckAll.current[0].classList.add('checkboxall');
+          }
+        } else {
+          refcheckAll.current[0].checked = false;
+          refcheckAll.current[0].classList.add('checkboxall');
+        }
+      }
+      if (refcheckAll.current[1]) {
+        if (b > 1) {
+          if (b == refInhouse.current.filter((i) => i != null)?.length + 1) {
+            refcheckAll.current[1].checked = true;
+            refcheckAll.current[1].classList.remove('checkboxall');
+          } else {
+            refcheckAll.current[1].checked = true;
+            refcheckAll.current[1].classList.add('checkboxall');
+          }
+        } else {
+          refcheckAll.current[1].checked = false;
+          refcheckAll.current[1].classList.add('checkboxall');
+        }
+      }
+    }
+
+    data?.length > 0 ? updateSameDay(sameDay) : undefined;
+  };
+
+  const checkAll = (groupNumber) => {
+    roomcode.roomcode = [];
+    let a = groupNumber == 0 ? refCheckin : refInhouse;
+    if (a.current[0]) {
+      a.current?.map((i) => {
+        i
+          ? refcheckAll.current[groupNumber].checked
+            ? (i.checked = true)
+            : (i.checked = false)
+          : undefined;
+      });
+    }
+    let checkin = data.filter((i) => i.tinhTrang == 0);
+    let checkout = data.filter((i) => i.tinhTrang == 1);
+    for (let i = 0; i < refCheckin.current.length; i++) {
+      roomcode.roomcode.push(checkin[i]?.code);
+    }
+    for (let i = 0; i < refInhouse.current.length; i++) {
+      roomcode.roomcode.push(checkout[i]?.code);
+    }
+    oncheck();
+  };
+
+  const openService = (q, j, value, class2) => {
+    let arr3 = [...active];
+    let ab = document.querySelectorAll(`.taball`);
+    let tableOpenService = document.querySelector(`.${q}`);
+    if (arr3[j].active == true) {
+      tableOpenService ? tableOpenService.classList.remove('tableOpen1') : undefined;
+      arr3[j].active = false;
+      setActive(arr3);
+    } else {
+      for (let i = 0; i < ab?.length; i++) {
+        ab[i].classList.remove('tableOpen1');
+      }
+      tableOpenService.classList.add('tableOpen1');
+      arr3?.map((i) => (i.active = false));
+      arr3[j].active = true;
+      setActive(arr3);
+    }
+    let abc2 = 0;
+    arr3.map((i, index) => {
+      if (i.active == true) {
+        numberRef.current = index;
+        abc2++;
+      }
+    });
+    if (abc2 == 0) {
+      numberRef.current = null;
+    }
+  };
+  const selectRange = (value, groupNumber) => {
+    let arr = data.filter((i) => i.tinhTrang == groupNumber);
+
+    roomcode.roomcodeGroup.checkin = [];
+    roomcode.roomcodeGroup.inHouse = [];
+    if (groupNumber == 0) {
+      roomcode.roomcode.map((i) => {
+        data[i].tinhTrang != groupNumber
+          ? roomcode.roomcodeGroup.checkin.push(data[i].code)
+          : undefined;
+      });
+    }
+    if (groupNumber == 1) {
+      roomcode.roomcode.map((i) => {
+        data[i].tinhTrang != groupNumber
+          ? roomcode.roomcodeGroup.inHouse.push(data[i].code)
+          : undefined;
+      });
+    }
+
+    roomcode.roomcode = [];
+    for (let i = 0; i < value; i++) {
+      groupNumber == 0
+        ? roomcode.roomcodeGroup.checkin.push(arr[i].code)
+        : roomcode.roomcodeGroup.inHouse.push(arr[i].code);
+    }
+    roomcode.roomcode = [...roomcode.roomcodeGroup.checkin, ...roomcode.roomcodeGroup.inHouse];
+    let a = groupNumber == 0 ? refCheckin : refInhouse;
+    for (let i = 0; i <= a.current?.length; i++) {
+      if (a.current[i]) {
+        a.current[i].checked = false;
+      }
+    }
+    if (value > 0) {
+      let j = 0;
+      for (let i = 1; i <= value; i++) {
+        if (a.current[i - 1]) {
+          a.current[i - 1].checked = true;
+          j++;
+        }
+      }
+    }
+  };
+
+  const [mouse, setMouse] = useState({
+    ok: false,
+  });
+  useEffect(() => {
+    window.addEventListener('mouseup', () => {
+      oncheck();
+      mouse.ok = false;
+    });
+    window.removeEventListener('mouseup', () => {
+      oncheck();
+      mouse.ok = false;
+    });
+  }, []);
+
+  const onMouseEnter = (index, groupNumber, ma) => {
+    let a = groupNumber == 0 ? refCheckin : refInhouse;
+    if (refCheckin.current[index] || refInhouse.current[index]) {
+      if (mouse.ok) {
+        let index2 = roomcode.roomcode.indexOf(ma);
+        a.current[index].checked ? roomcode.roomcode.splice(index2, 1) : roomcode.roomcode.push(ma);
+        a.current[index].checked = a.current[index].checked ? false : true;
+      }
+    }
+  };
+  let numberTabOpen = 0;
+  let numberService = true;
+
+  return (
+    <div className="table-component">
+      {data.length == 0 ? (
+        <div className="Nodata">
+          {search != '' ? <div>No Data Found</div> : <div>No Rooms</div>}
+        </div>
+      ) : (
+        <table>
+          <thead className="tableHead">
+            <tr>
+              <th>{intl.formatMessage({ id: 'pages.booking.getroom.no' })}</th>
+              {column
+                ? column?.map((i, index) => (
+                    <th style={i.style} key={index}>
+                      {i.title}
+                    </th>
+                  ))
+                : undefined}
+            </tr>
+          </thead>
+
+          {groupbooking?.map((i, index) =>
+            numberService &&
+            data.filter((o) => o.tinhTrang == Math.floor(index / 2))?.length > 0 ? (
+              <tbody
+                style={{
+                  background:
+                    Math.floor(index / 2) == 1
+                      ? 'rgb(141, 204, 255)'
+                      : Math.floor(index / 2) == 2
+                      ? 'rgb(203 203 203)'
+                      : '',
+                }}
+                key={index}
+              >
+                <tr
+                  style={{
+                    background:
+                      Math.floor(index / 2) == 1
+                        ? 'rgb(141, 204, 255)'
+                        : Math.floor(index / 2) == 2
+                        ? 'rgb(203 203 203)'
+                        : '',
+                  }}
+                >
+                  <td colSpan={column?.length}>
+                    <span className="group checkin">
+                      <buttonList.tableOpen
+                        showAll={abc}
+                        showAll2={search}
+                        className={`checkinMain${bookingNumber}`}
+                        index={numberTabOpen}
+                        classClose={`groupCheckin${Math.floor(index / 2)}`}
+                      ></buttonList.tableOpen>
+                      <div style={{ display: 'none' }}>{(numberTabOpen = numberTabOpen + 1)}</div>
+                      {edit == 2 || edit == 1 ? undefined : Math.floor(index / 2) == 0 ||
+                        Math.floor(index / 2) == 1 ? (
+                        <input
+                          onClick={() => {
+                            checkAll(Math.floor(index / 2));
+                          }}
+                          ref={(el) => (refcheckAll.current[Math.floor(index / 2)] = el)}
+                          type="checkbox"
+                          className={` `}
+                        ></input>
+                      ) : undefined}
+                      <div>
+                        Status:{i} (
+                        {data.filter((o) => o.tinhTrang == Math.floor(index / 2))?.length})
+                      </div>
+                      {Math.floor(index / 2) != 2 ? (
+                        <Slider
+                          style={{ marginLeft: '20px', width: '200px' }}
+                          defaultValue={0}
+                          max={data.filter((o) => o.tinhTrang == Math.floor(index / 2))?.length}
+                          onChange={(e) => {
+                            selectRange(e, Math.floor(index / 2));
+                          }}
+                        ></Slider>
+                      ) : undefined}
+                    </span>
+                  </td>
+                </tr>
+                {(numberService = false)}
+              </tbody>
+            ) : (
+              data
+                .filter((o) => o.tinhTrang == Math.floor(index / 2))
+                ?.map((i1, index1) => (
+                  <tbody
+                    className={` row-table groupCheckin${Math.floor(index / 2)} tableService`}
+                    key={index1}
+                    onMouseEnter={() => {
+                      onMouseEnter(index1, Math.floor(index / 2), i1.code);
+                    }}
+                  >
+                    {(edit == 2 || edit == 1) && Math.floor(index / 2) == 0 ? (
+                      <inputTable.Row
+                        bookingNumber={bookingNumber}
+                        className={`taball tabopen${Math.floor(
+                          index / 2,
+                        )}${index1}${bookingNumber}`}
+                        onClick={() =>
+                          openService(
+                            `tabopen${Math.floor(index / 2)}${index1}${bookingNumber}`,
+                            i1.code,
+                          )
+                        }
+                        column={column}
+                        i={i1}
+                        index={index1}
+                      ></inputTable.Row>
+                    ) : (
+                      <tr
+                        style={{
+                          background:
+                            Math.floor(index / 2) == 1
+                              ? 'rgb(141, 204, 255)'
+                              : Math.floor(index / 2) == 2
+                              ? 'rgb(203 203 203)'
+                              : '',
+                        }}
+                        ref={(rel) =>
+                          Math.floor(index / 2) == 0
+                            ? (refCheckinColor.current[index1] = rel)
+                            : Math.floor(index / 2) == 1
+                            ? (refInhouseColor.current[index1] = rel)
+                            : undefined
+                        }
+                        className="hoverTable"
+                      >
+                        <td>
+                          <span className="d-flex" style={{ gap: '20px' }}>
+                            {i1.service && i1.service?.length > 0 ? (
+                              <div
+                                className={` tableOpen  `}
+                                style={{ marginLeft: '10px' }}
+                                onClick={(value) => {
+                                  openService(
+                                    `tabopen${Math.floor(index / 2)}${index1}${bookingNumber}`,
+                                    i1.code,
+                                  );
+                                }}
+                              >
+                                <div
+                                  className={`taball tabopen${Math.floor(
+                                    index / 2,
+                                  )}${index1}${bookingNumber} table-seriver-button${index}${bookingNumber}`}
+                                ></div>
+                                <div></div>
+                              </div>
+                            ) : (
+                              <div style={{ width: '30px' }}></div>
+                            )}
+                            <div
+                              onMouseDown={(e) => {
+                                if (refCheckin.current[index1] || refInhouse.current[index1]) {
+                                  let a = Math.floor(index / 2) == 0 ? refCheckin : refInhouse;
+                                  mouse.ok = true;
+                                  let index2 = roomcode.roomcode.indexOf(i1.code);
+                                  a.current[index1].checked
+                                    ? roomcode.roomcode.splice(index2, 1)
+                                    : roomcode.roomcode.push(i1.code);
+                                  a.current[index1].checked = !a.current[index1].checked
+                                    ? true
+                                    : false;
+                                }
+                                document.getElementsByClassName(
+                                  `group${Math.floor(index / 2)}`,
+                                ).checked = true;
+                              }}
+                              style={{ position: 'relative' }}
+                            >
+                              <div
+                                style={{
+                                  position: 'absolute',
+                                  top: '0',
+                                  left: '0',
+                                  height: '100%',
+                                  width: '100%',
+                                  zIndex: 20,
+                                }}
+                              ></div>
+                              {edit != 2 &&
+                              (Math.floor(index / 2) == 0 || Math.floor(index / 2) == 1) ? (
+                                <input.checkbox
+                                  value={index}
+                                  disabled={true}
+                                  ref={(rel) =>
+                                    Math.floor(index / 2) == 0
+                                      ? (refCheckin.current[index1] = rel)
+                                      : Math.floor(index / 2) == 1
+                                      ? (refInhouse.current[index1] = rel)
+                                      : undefined
+                                  }
+                                  style={{ height: '20px', width: '20px' }}
+                                ></input.checkbox>
+                              ) : undefined}
+                            </div>
+                            {index1 + 1}
+                          </span>
+                        </td>
+                        {column?.map((j, indexx) => (
+                          <td
+                            style={{ userSelect: j.dataIndex == 'ma' ? '' : 'none' }}
+                            key={indexx}
+                            onMouseDown={(e) => {
+                              if (refCheckin.current[index1] || refInhouse.current[index1]) {
+                                let a = Math.floor(index / 2) == 0 ? refCheckin : refInhouse;
+                                mouse.ok = true;
+                                let index2 = roomcode.roomcode.indexOf(i1.code);
+                                a.current[index1].checked
+                                  ? roomcode.roomcode.splice(index2, 1)
+                                  : roomcode.roomcode.push(i1.code);
+                                a.current[index1].checked = !a.current[index1].checked
+                                  ? true
+                                  : false;
+                              }
+                            }}
+                          >
+                            <span className="d-flex" style={{ gap: '20px' }}>
+                              {j.render
+                                ? j.render(i1, index1 + 1, i1[j.dataIndex])
+                                : i1[j.dataIndex]}
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                    )}
+                    {active[i1.code].active ? (
+                      <tr>
+                        <TableChild
+                          column={column?.length}
+                          data={data}
+                          onclick={(value) => {
+                            setData(value);
+                          }}
+                          unfocus={(e) => {
+                            updateService(e, i1.code);
+                          }}
+                          active={active[i1.code]}
+                          columnService={columnService}
+                          index={index}
+                          bookingNumber={bookingNumber}
+                          i1={i1}
+                        ></TableChild>
+                      </tr>
+                    ) : undefined}
+
+                    {(numberService = true)}
+                  </tbody>
+                ))
+            ),
+          )}
+          <tbody className="footerTable">
+            <td>
+              <strong>Total</strong>: {numberRoom}
+            </td>
+            {column?.map((k, index) => (
+              <td key={index}>{k.total == 0 ? 0 : k.total ? formatNumber(k.total) : ''}</td>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+};
+
+const TableChild = ({
+  active,
+  unfocus,
+  columnService,
+  bookingNumber,
+  i1,
+  column,
+  onclick,
+  data,
+}) => {
+  const component = useMemo(() => {
+    return (
+      <td
+        className={``}
+        colSpan={12}
+        style={{
+          borderBottom: '1px solid transparent',
+        }}
+      >
+        <div style={{ paddingLeft: '20px' }}>
+          <table className="tableServiceE">
+            <thead>
+              <tr className="group2">
+                {columnService?.map((o, index) => (
+                  <th key={index}>{o.title}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {i1.service
+                ? i1.service?.map((o, index) =>
+                    o?.maPhongThue == i1.ma ? (
+                      <tr key={index} className="group2">
+                        {columnService?.map((p, indexx) => (
+                          <td key={indexx}>
+                            {p.dataIndex == 'thanhTien' ? (
+                              <div
+                                className={`editTable`}
+                                onClick={() => {
+                                  if (data) {
+                                    let arr = [...data];
+                                    arr[i1.code].service[index].editPrice = true;
+
+                                    onclick(arr);
+                                  }
+                                }}
+                              >
+                                {data[i1.code].service[index].editPrice ? (
+                                  <input.number
+                                    formatter={formatNumber}
+                                    autoFocus={true}
+                                    defaultValue={o.thanhTien}
+                                    blur={(e) => {
+                                      let arr = [...data];
+                                      let thanhTien = number(e.target.value);
+                                      unfocus({
+                                        ...arr[i1.code].service[index],
+                                        thanhTien: thanhTien,
+                                        index: index,
+                                      });
+                                      setTimeout(() => {
+                                        if (data) {
+                                          let arr = [...data];
+                                          arr[i1.code].service[index].editPrice = false;
+
+                                          onclick(arr);
+                                        }
+                                      }, 200);
+                                    }}
+                                  ></input.number>
+                                ) : (
+                                  <div>{formatNumber(o.thanhTien)}</div>
+                                )}
+                              </div>
+                            ) : p.dataIndex == 'soLuong' ? (
+                              o.maDichVu != 'RM' ? (
+                                <div
+                                  className={`editTable`}
+                                  onClick={() => {
+                                    if (data) {
+                                      let arr = [...data];
+                                      arr[i1.code].service[index].editNumber = true;
+
+                                      onclick(arr);
+                                    }
+                                  }}
+                                >
+                                  {data[i1.code].service[index].editNumber ? (
+                                    <input.number
+                                      formatter={formatNumber}
+                                      autoFocus={true}
+                                      defaultValue={o.soLuong}
+                                      blur={(e) => {
+                                        let arr = [...data];
+                                        let soluong = number(e.target.value);
+                                        unfocus({
+                                          ...arr[i1.code].service[index],
+                                          soLuong: soluong,
+                                          index: index,
+                                        });
+                                        setTimeout(() => {
+                                          if (data) {
+                                            let arr = [...data];
+                                            arr[i1.code].service[index].editNumber = false;
+
+                                            onclick(arr);
+                                          }
+                                        }, 200);
+                                      }}
+                                    ></input.number>
+                                  ) : (
+                                    <div>{formatNumber(o.soLuong)}</div>
+                                  )}
+                                </div>
+                              ) : (
+                                <></>
+                              )
+                            ) : p.render ? (
+                              p.render(o, index + 1, o[p.dataIndex], i1.code)
+                            ) : (
+                              o[p.dataIndex]
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ) : undefined,
+                  )
+                : undefined}
+            </tbody>
+          </table>{' '}
+        </div>
+      </td>
+    );
+  }, [active, data]);
+  return active ? active.active ? component : <></> : undefined;
+};
+const number = (value) => {
+  let a = '';
+  value.split(',')?.map((i) => {
+    i != '' ? (a += i) : undefined;
+  });
+  return parseFloat(a);
+};
+export { Table };

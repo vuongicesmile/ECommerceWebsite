@@ -1,0 +1,50 @@
+.switchComponent {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  width: 50px;
+  height: 26px;
+  background: rgb(255, 255, 255);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.5s;
+  .switchDot {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.5s;
+  }
+
+  .switchDoton {
+    left: 54%;
+  }
+  .switchDotonChildren {
+    left: 80%;
+  }
+  .switchDotoff {
+    left: 5%;
+  }
+}
+.switchComponenton {
+  color: white;
+  background: #5cbeff;
+}
+.switchComponentoff {
+  background: #adaaaac4;
+}
+.switchOnReadOnly {
+  cursor: not-allowed;
+}
+@keyframes switchc {
+  0% {
+    transform: scaleY(0.5);
+  }
+}
+@keyframes switchc2 {
+  0% {
+    transform: scaleY(0.5);
+  }
+}

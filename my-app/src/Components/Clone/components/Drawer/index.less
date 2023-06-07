@@ -1,0 +1,24 @@
+.DrawerComponent{
+    overflow: auto;
+    
+    background: rgb(255, 255, 255);
+    box-shadow: 2px 1px 5px 10px rgba(153, 149, 149, 0.281);
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 100;
+    transition:0.3s ;
+    transform: translateX(100vw);
+    .DrawerComponent-header{
+        width: 100%;
+        background: white;
+        position: sticky;
+        top: 0;
+        display: grid;
+        padding: 5px;
+        align-items: center;
+        justify-content: start;
+        grid-template-columns: 50px calc( 100% - 50px );
+    }
+}

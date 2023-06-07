@@ -1,0 +1,50 @@
+.datepicker-container {
+  .datepicker-content {
+    top: 120%;
+    z-index: 20;
+    width: fit-content;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+  }
+
+  .datepicker-component-toggle-button {
+    gap: 10px;
+    height: 30px;
+    background-color: white;
+    border: 0.5px solid rgba(64, 66, 67, 0.2);
+    border-radius: 5px;
+  }
+
+  .react-calendar {
+    font-size: 14px !important;
+    border: none !important;
+
+    .react-calendar__month-view {
+      &:first-child {
+        position: relative;
+        margin-right: 30px;
+
+        &:after {
+          position: absolute;
+          top: 0;
+          left: 112%;
+          width: 1px;
+          height: 100%;
+          // background-image: url(./assets/arrow.svg);
+          background-repeat: no-repeat;
+          border: 1px solid #8f8f8f;
+          content: '';
+        }
+      }
+
+      &:nth-child(2) {
+        margin-left: 30px;
+      }
+    }
+  }
+
+  .datepicker-button-cancel {
+    width: 130px;
+  }
+}

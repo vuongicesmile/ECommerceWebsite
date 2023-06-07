@@ -1,0 +1,191 @@
+.MuiDateRangePickerDay div div:not(:first-child) {
+  z-index: 111111111111111111;
+  background: rgb(255, 255, 255);
+}
+.MuiDateRangePickerDay div div:not(:first-child) {
+  z-index: 111111111111111111;
+  background: rgb(255, 255, 255);
+}
+.MuiDateRangePickerDay {
+  z-index: 88888888888888888888888888888888888888;
+  background: #4086f7 !important;
+}
+.MuiDateRangePickerDay {
+  z-index: 88888888888888888888888888888888888888;
+  background: #4086f7 !important;
+}
+.MuiDateRangePickerDay {
+  z-index: 88888888888888888888888888888888888888;
+  background: #4086f7 !important;
+}
+.MuiDateRangePickerDay div div:not(:first-child) {
+  z-index: 111111111111111111;
+  background: rgb(255, 255, 255);
+}
+.PrivatePickersSlideTransition-root {
+  z-index: 111111111111111111;
+  background: rgb(255, 255, 255);
+}
+// .datePicker-component {
+//   background: #f8fbff;
+//   border-radius: 10px;
+//   .MuiOutlinedInput-root {
+//     height: 30px;
+//   }
+//   button {
+//     color: #4086f7;
+//   }
+//   input {
+//     width: 100%;
+//     height: 100%;
+//     font-size: 14px !important;
+//   }
+//   fieldset {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     height: 100% !important;
+
+//     border-radius: 10px;
+//   }
+
+//   label {
+//     top: -6px;
+//     background: white;
+//   }
+// }
+// .MuiOutlinedInput-notchedOutline {
+//   border: 1px solid rgb(118, 138, 165) !important;
+// }
+.datePicker-component2 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: max-content;
+}
+.datePicker-component {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.onSelectDate {
+  color: white;
+  background: #4086f7;
+}
+.dateDropPicker {
+  position: absolute;
+  left: 0;
+  z-index: 101;
+  display: none;
+  grid-template-columns: max-content auto auto;
+  gap: 5px;
+  width: max-content;
+  height: 200px;
+  font-size: 14px;
+  background: rgb(248, 248, 248);
+  box-shadow: 0px 10px 20px 5px rgba(133, 132, 132, 0.205);
+}
+.dropitemPicker {
+  height: 100%;
+  overflow: auto;
+  scroll-behavior: smooth;
+  .disable {
+    background: #bcbcbc9d;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 35px;
+    height: 30px;
+    cursor: pointer;
+    &:hover {
+      color: white;
+      background: #98c0ff;
+    }
+  }
+}
+
+.clearDate {
+  position: absolute;
+  top: -14px;
+  right: -2px;
+  z-index: 15;
+  display: none;
+  cursor: pointer;
+  transition: 0.3s;
+  animation: date 0.5s;
+  &:hover {
+    transform: scale(1.2);
+  }
+  img {
+    width: 20px;
+    background: red;
+    border-radius: 50%;
+  }
+}
+// @keyframes date {
+//   0% {
+//     transform: translate(20px, 30px) scale(0);
+//   }
+// }
+.datePicker-handmake {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: max-content;
+  height: 30px;
+  padding: 11px;
+  overflow: hidden;
+  font-size: 14px;
+  background: white;
+  border: 0.5px solid rgba(64, 66, 67, 0.2);
+  border-radius: 5px;
+
+  img {
+    width: 20px;
+    cursor: pointer;
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(118%)
+      contrast(119%);
+  }
+
+  input {
+    width: 22px;
+    background: transparent;
+    border: none;
+  }
+  input:nth-child(3) {
+    width: 40px;
+  }
+}
+
+.datePicker-component-handmake {
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+  // justify-content: center;
+  .toDatepicker {
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+}
+.datePickerDisable {
+  overflow: hidden;
+  opacity: 0.6;
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #bcbcbc73;
+    content: '';
+  }
+}

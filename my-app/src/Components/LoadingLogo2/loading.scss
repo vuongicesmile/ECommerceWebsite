@@ -1,0 +1,78 @@
+.content-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.dot1 {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border: 5px solid transparent;
+  border-top: 5px solid burlywood;
+  border-bottom: 5px solid burlywood;
+  border-radius: 50px;
+  // name || dủration - timing-func - delay
+
+  //  animation-timing-function
+  //ease : tạo hiệu ứng bắt đầu chậm sau đó nhanh dần và kết thúc llaij chậm dần
+  // linear : tạo hiệu ứng chuyển đổi từ lúc bắt đầu với lúc kết thúc tốc độ như nhau
+  //ease-in : tạo hiệu ứng chuyển đổi chậm lúc ban đầu
+  // ease-out : tạo hiểu ứng chuyển chậm lúc kết thúc
+  // eáse-in-out : tạo hiệu ứng chuyển đổi châm cả lúc bắt đầu lẫn kết thúc
+
+  animation: animateRotate 1.5s linear infinite;
+}
+
+.dot2 {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 5px solid transparent;
+  border-top: 5px solid burlywood;
+  border-bottom: 5px solid burlywood;
+  border-radius: 50px;
+  //box-shadow
+  // h-offet : vị trí bóng đổ theo chiều ngang
+  //v-ofset : vị tri bóng đổ theo chiều dọc
+  //spread : kích thước của bóng
+  // blủr : độ nhoè
+  //color màu
+  box-shadow: 10px 0px 40px rgb(169, 105, 17);
+  animation: animateRotate 1.5s linear infinite;
+}
+
+.dot3 {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border: 5px solid burlywood;
+  border-radius: 50%;
+  animation: animateRotate 1.5s linear infinite;
+}
+.dot4 {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 5px solid burlywood;
+  border: 5px solid transparent;
+  border-left: 5px solid burlywood;
+  border-right: 5px solid burlywood;
+  border-radius: 50px;
+  animation: animateRotateFipOver 1.5s linear infinite;
+}
+@keyframes animateRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes animateRotateFipOver {
+  to {
+    transform: rotate(-360deg);
+  }
+}

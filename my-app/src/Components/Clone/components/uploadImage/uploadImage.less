@@ -1,0 +1,73 @@
+.upload {
+  position: inherit;
+  display: flex;
+  // justify-content: center;
+  width: 100%;
+  .uploader-img{
+    width: 100%;
+    object-fit: contain;
+  }
+  .uploader-wrapper{
+    min-width: 100%;
+  }
+  &-card {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #3e5c76;
+    border-radius: 10px;
+    margin: 23px 0 15px 0;
+    .ant-upload-picture-card-wrapper {
+      display: flex !important;
+      justify-content: center !important;
+    }
+    .upload-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 35px;
+      border-bottom: 1px solid #3e5c76;
+    }
+    .uploader {
+      &-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 50%;
+        &-img {
+          flex-shrink: 0;
+          width: 100%;
+          min-width: 100%;
+          min-height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+    .operation-img {
+      display: flex;
+      gap: 0 0.9375rem;
+      justify-content: center;
+      padding-bottom: 0.625rem;
+      .preview-img,
+      .remove-img {
+        cursor: pointer;
+      }
+    }
+  }
+  .avatar-uploader {
+    
+    .ant-upload-picture-card-wrapper {
+      display: flex !important;
+      justify-content: center !important;
+    }
+  }
+  
+}
+.uploader-img{
+  width: 100%;
+  object-fit: contain;
+}
+.uploader-wrapper{
+  min-width: 100%;
+}
