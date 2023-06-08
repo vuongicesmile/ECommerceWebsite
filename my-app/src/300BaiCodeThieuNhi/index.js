@@ -195,3 +195,17 @@ const runningSum = (sum) => {
     }
     return result;
 }
+// richest customer weadth 
+//input : account : [[1,2,3],[3,2,1]]
+//output : 6
+
+const maximumWeadth = (account) => {
+    let max = 0;
+    for (let i = 0; i < account.length; i++) {
+        const sum = account[i].reduce((a, b) => a + b, 0)
+        if (sum > max) {
+            max = sum
+        }
+    }
+    return max;
+}
