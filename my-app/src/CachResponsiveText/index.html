@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .boxed {
+      /* chuyển font-size rem */
+      /* royakfig.github.io */
+      height: 200px;
+      width: 200px;
+      /* width . min(value1,value2) */
+      /* trong 2 cai value này cái nào nhỏ hơn thì lấy cái đó */
+      /* width:min(200px,100%) */
+      /*  ví dụ trên máy tính có độ dài của cái box là 895px , mà min
+      hiện tại đang chứa giá trị 200 thì nó vẫn lấy */
+      /* nếu xuống điện thoại có giá trị tầm 190px thì nó sẽ lấy giá
+      trị sau là 100% */
+      /* width: max(value1,value2) 
+      ngược lại với min
+      */
+      /* clamp :  */
+      /* width : clamp(min,between,max) */
+      /* dùng nhiều nhất khi làm font size */
+
+      background-image: linear-gradient(to right, #2cccff, #20e3b2);
+      border-radius: 8px;
+    }
+    .heading {
+      font-size: clamp(20px, 1vw * 16px, 30px);
+    }
+    @media screen and (max-width: 768px) {
+      .boxed {
+        width: 100%;
+      }
+    }
+  </style>
+  <body>
+    <div class="boxed">
+      <!-- vấn đề đặt ra ở desktop (font-size : 30px) thì nhìn oke cơ mà khi xuống
+        mobile thì nhìn to (font-size : 20px)
+    
+    -->
+      <h1 class="heading">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam iusto
+        amet officiis? Qui ipsum ipsa vitae debitis neque exercitationem commodi
+        pariatur repellendus harum animi, repellat vero minima facilis,
+        explicabo delectus!
+      </h1>
+    </div>
+  </body>
+</html>
