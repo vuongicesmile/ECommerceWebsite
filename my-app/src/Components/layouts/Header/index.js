@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Drawer, Menu, Typography, Badge, Table, InputNumber, Button, Form , Input, Checkbox, message } from "antd";
+import { Drawer, Menu, Typography, Badge, Table, InputNumber, Button, Form, Input, Checkbox, message } from "antd";
 import { HomeFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { cartItemsCountSelector } from "../../../pages/Cart/selectors";
 
 const AppHeader = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const cartItemCount = useSelector(cartItemsCountSelector)
+
   const items = [
     {
       label: <HomeFilled />,
@@ -46,13 +51,23 @@ const AppHeader = () => {
   return (
     <div className="app-header">
       <div style={{ minWidth: "330px" }}>
-        <Menu 
-        className="appMenu"
-        onClick={onMenuClick}
-        mode="horizontal" 
-        items={items} />
+        <Menu
+          className="appMenu"
+          onClick={onMenuClick}
+          mode="horizontal"
+          items={items} />
       </div>
-      <Typography.Title>NQV Store</Typography.Title>
+      <Typography.Title> </Typography.Title>
+      {console.log('cartItemCount', cartItemCount)}
+      <Badge
+        count={cartItemCount}
+        className="shoppingcarticon1"
+        onClick={() => {
+
+        }}
+      >
+        <ShoppingCartOutlined />
+      </Badge>
       <AppCart />
     </div>
   );
@@ -79,7 +94,7 @@ function AppCart() {
     message.success("Your order has been successfully")
   }
 
-  
+
 
   return (
     <div>
@@ -96,31 +111,31 @@ function AppCart() {
         onClose={() => {
           setCheckoutDrawerOpen(false)
         }}
-        >
+      >
 
-          <Form
+        <Form
           onFinish={onConfirmOrder}
-          >
-            <Form.Item label="Full Name" name="full_name">
-              <Input placeholder="Enter your full name" />
-            </Form.Item>
-            <Form.Item label="Email Name" name="your_mail">
-              <Input placeholder="Enter your full Email" />
-            </Form.Item>
-            <Form.Item label="Address Name" name="your_address">
-              <Input placeholder="Enter your full address" />
-            </Form.Item>
-            <Form.Item>
-              <Checkbox
+        >
+          <Form.Item label="Full Name" name="full_name">
+            <Input placeholder="Enter your full name" />
+          </Form.Item>
+          <Form.Item label="Email Name" name="your_mail">
+            <Input placeholder="Enter your full Email" />
+          </Form.Item>
+          <Form.Item label="Address Name" name="your_address">
+            <Input placeholder="Enter your full address" />
+          </Form.Item>
+          <Form.Item>
+            <Checkbox
               defaultChecked
               disabled
-              > Cash on Delivery</Checkbox>
-            </Form.Item>
-            <Typography.Paragraph type="secondary">More Method cooming soon</Typography.Paragraph>
-            <Button type="primary" htmlType="submit">Confirm Order </Button>
-          </Form>
+            > Cash on Delivery</Checkbox>
+          </Form.Item>
+          <Typography.Paragraph type="secondary">More Method cooming soon</Typography.Paragraph>
+          <Button type="primary" htmlType="submit">Confirm Order </Button>
+        </Form>
 
-        </Drawer>
+      </Drawer>
       <Drawer
         visible={cartDrawerOpen}
         onClose={() => setCartDrawerOpen(false)}
@@ -150,17 +165,17 @@ function AppCart() {
                     value={cartItems.find((item) => item.id == record.id).quantity}
                     onChange={(value) => {
                       setCartItems((pre) => pre.map((cart) => {
-                          if (record.id === cart.id) {
-                            cart.total = cart.price * value;
-                            cart.quantity = value;
-                          }
-                          console.log(cart);
-                          return cart;
-                        })
-                        
+                        if (record.id === cart.id) {
+                          cart.total = cart.price * value;
+                          cart.quantity = value;
+                        }
+                        console.log(cart);
+                        return cart;
+                      })
+
                       )
-                      
-                      
+
+
                     }}
                   />
                 );
@@ -169,7 +184,7 @@ function AppCart() {
             {
               title: "Total",
               dataIndex: "total",
-              render : (value) => {
+              render: (value) => {
                 return <span>${value}</span>
               }
             },
@@ -182,17 +197,17 @@ function AppCart() {
 
             return <span> Total : {total} </span>;
           }
-        
-        }
+
+          }
         />
         <Button type="primary"
-        onClick={() => {
-          setCheckoutDrawerOpen(true)
-        }}
+          onClick={() => {
+            setCheckoutDrawerOpen(true)
+          }}
         > Checkout Your Cart</Button>
       </Drawer>
 
-      
+
 
     </div>
   );

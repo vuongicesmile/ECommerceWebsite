@@ -177,8 +177,13 @@ function AddToCartButton({ item }) {
 
   const handleAddToCartToSubmit = (formValue) => {
     console.log('formValue', formValue);
-    const action = addToCart();
-    console.log(action);
+
+    const action = addToCart({
+      id: formValue.id,
+      product: formValue,
+      quantity: 1
+    });
+
     dispatch(action);
   }
   const [loading, setLoading] = useState(false);
@@ -210,7 +215,7 @@ function AddToCartButton({ item }) {
       type="link"
       onClick={() => {
         // addProductToCart();
-        handleAddToCartToSubmit()
+        handleAddToCartToSubmit(item)
 
 
       }}
