@@ -3,10 +3,8 @@ import { createSelector } from '@reduxjs/toolkit';
 // khi gặp state mà phụ thuộc vào các state khác thì không lưu trên redux 
 // thay vì đó dùng selector
 
-const cartItemsSelector = state => {
-    console.log(state);
-  return state.cart.cartItems;
-} 
+const cartItemsSelector = state => state.cart.cartItems;
+
 
 // count number of product in card
 // 1 thằng phụ thuộc selector cartItemsSelector
