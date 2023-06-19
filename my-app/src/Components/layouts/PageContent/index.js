@@ -7,9 +7,9 @@ import ModalCustom from "../../Modal";
 const PageContent = () => {
   return <div className="page-content">
     {/* <LoadingLogoReport2 /> */}
-    {/* <Category></Category> */}
+    <Category></Category>
     {/* <MappingValueByClass /> */}
-    <ModalCustom />
+    {/* <ModalCustom /> */}
 
   </div>;
 };

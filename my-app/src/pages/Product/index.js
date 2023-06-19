@@ -13,13 +13,22 @@ import {
 import React, { useEffect, useState } from "react";
 import { getAllProducts, getProductsByCategory } from "./../../API/index";
 import { useLocation } from "react-router-dom";
+import CartFeaure from "../Cart/index";
+import { useSelector, useDispatch } from 'react-redux'
+import { addToCart } from "../Cart/cartSlice";
 
 function Product() {
   const [item, setItem] = useState([]);
   const params = useLocation();
   const [loading, setLoading] = useState(false);
+  const [cartRedux, setCartRedux] = useState(false);
+
+
 
   const [sortOrder, setSortOrder] = useState("az");
+
+
+
 
   useEffect(() => {
     if (params.pathname.split("/")[1] == "home") {
@@ -30,11 +39,15 @@ function Product() {
           setLoading(false);
           setItem(json.products);
         });
-    } else {
+    } else if (params.pathname.split("/")[1] == "cart") {
+      console.log('vo day');
+      setCartRedux(true)
+    }
+
+    else {
       setLoading(true);
       fetch(
-        `https://dummyjson.com/products/category/${
-          params.pathname.split("/")[1]
+        `https://dummyjson.com/products/category/${params.pathname.split("/")[1]
         }`
       )
         .then((res) => res.json())
@@ -47,7 +60,7 @@ function Product() {
 
   const getSortedItems = () => {
     const sortedITems = [...item];
-    sortedITems.sort((a, b) => {
+    sortedITems?.sort((a, b) => {
       if (sortOrder == "az") {
         return a.title > b.titile ? 1 : a.titile === b.title ? 0 : -1;
       } else if (sortOrder == "za") {
@@ -57,7 +70,7 @@ function Product() {
       } else if (sortOrder == "highlow") {
         return a.price < b.price ? 1 : a.price === b.price ? 0 : -1;
       }
-     
+
     });
     return sortedITems;
   };
@@ -66,93 +79,108 @@ function Product() {
     return <Spin spinning />;
   }
   return (
-    <div>
-      <div>
-        <Typography.Text> View Items Sorted By :</Typography.Text>
-        <Select
-          defaultValue={"az"}
-          onChange={(value) => {
-            setSortOrder(value);
-          }}
-          options={[
-            {
-              label: "Aphabelically a-z",
-              value: "az",
-            },
-            {
-              label: "Aphabelically z-a",
-              value: "za",
-            },
-            {
-              label: "Price Low to Hight",
-              value: "lowhigh",
-            },
-            {
-              label: "Price Hight to Low a-z",
-              value: "highlow",
-            },
-          ]}
-        ></Select>
-      </div>
+    <>
+      {cartRedux ? <CartFeaure /> :
+        <div>
+          <div>
+            <Typography.Text> View Items Sorted By :</Typography.Text>
+            <Select
+              defaultValue={"az"}
+              onChange={(value) => {
+                setSortOrder(value);
+              }}
+              options={[
+                {
+                  label: "Aphabelically a-z",
+                  value: "az",
+                },
+                {
+                  label: "Aphabelically z-a",
+                  value: "za",
+                },
+                {
+                  label: "Price Low to Hight",
+                  value: "lowhigh",
+                },
+                {
+                  label: "Price Hight to Low a-z",
+                  value: "highlow",
+                },
+              ]}
+            ></Select>
+          </div>
 
-      <List
-        grid={{ column: 3 }}
-        dataSource={getSortedItems()}
-        renderItem={(product, index) => {
-          return (
-            <Badge.Ribbon
-              text={product.price}
-              color="pink"
-              className="itemCardBadge"
-            >
-              <Card
-                className="itemCard"
-                title={product.title}
-                key={index}
-                cover={
-                  <Image
-                    className="itemCardImage"
-                    src={product.thumbnail}
-                  ></Image>
-                }
-                actions={[
-                  <Rate allowHalf value={product.rating}></Rate>,
-                  <AddToCartButton item={product} />,
-                ]}
-              >
-                <Card.Meta
-                  title={
-                    <Typography.Paragraph>
-                      Price : ${product.price + " "}
-                      <Typography.Text delete type="danger">
-                        $
-                        {parseFloat(
-                          product.price +
-                            (
-                              product.price * product.discountPencentage
-                            ).toFixed(2)
-                        )}
-                      </Typography.Text>
-                    </Typography.Paragraph>
-                  }
-                  description={
-                    <Typography.Paragraph
-                      ellipsis={{ rows: 2, expandable: true, symbol: "more" }}
-                    >
-                      {product.description}
-                    </Typography.Paragraph>
-                  }
-                ></Card.Meta>
-              </Card>
-            </Badge.Ribbon>
-          );
-        }}
-      ></List>
-    </div>
+          <List
+            grid={{ column: 3 }}
+            dataSource={getSortedItems()}
+            renderItem={(product, index) => {
+              return (
+                <Badge.Ribbon
+                  text={product.price}
+                  color="pink"
+                  className="itemCardBadge"
+                >
+                  <Card
+                    className="itemCard"
+                    title={product.title}
+                    key={index}
+                    cover={
+                      <Image
+                        className="itemCardImage"
+                        src={product.thumbnail}
+                      ></Image>
+                    }
+                    actions={[
+                      <Rate allowHalf value={product.rating}></Rate>,
+                      <AddToCartButton item={product} />,
+                    ]}
+                  >
+                    <Card.Meta
+                      title={
+                        <Typography.Paragraph>
+                          Price : ${product.price + " "}
+                          <Typography.Text delete type="danger">
+                            $
+                            {parseFloat(
+                              product.price +
+                              (
+                                product.price * product.discountPencentage
+                              ).toFixed(2)
+                            )}
+                          </Typography.Text>
+                        </Typography.Paragraph>
+                      }
+                      description={
+                        <Typography.Paragraph
+                          ellipsis={{ rows: 2, expandable: true, symbol: "more" }}
+                        >
+                          {product.description}
+                        </Typography.Paragraph>
+                      }
+                    ></Card.Meta>
+                  </Card>
+                </Badge.Ribbon>
+              );
+            }}
+          ></List>
+        </div>
+      }
+    </>
   );
 }
 
+
+
 function AddToCartButton({ item }) {
+  const dispatch = useDispatch()
+
+
+  const handleAddToCartToSubmit = (formValue) => {
+    console.log('formValue', formValue);
+    const action = addToCart();
+    console.log(action);
+    dispatch(action);
+  }
   const [loading, setLoading] = useState(false);
   const addProductToCart = () => {
     setLoading(true);
@@ -181,7 +209,10 @@ function AddToCartButton({ item }) {
     <Button
       type="link"
       onClick={() => {
-        addProductToCart();
+        // addProductToCart();
+        handleAddToCartToSubmit()
+
+
       }}
       loading={loading}
     >

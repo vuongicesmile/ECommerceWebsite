@@ -1,0 +1,16 @@
+khi bấm vào nút chọn mua thì nó tác động lên 1 cái global state nào đấy 
+=> quăng lên redux 
+
+Cart 
+- ShowMiniCart : true / false
+-cartItems -> item(product, quantity)
+
+State tính toán phụ thuộc vào state có sẵn => nên sử lý ở state component
+- cartItemsCount // từ thông tin cart items tính được trong cái cart items có tổng cộng bao nhiêu sản phẩm
+- cartTotal : có thành tiền là bao nhiêu tiền
+
+=> createSelector
+Các item trong giỏ hàng 
+- Thông tin sản phẩm
+- số lượng
+
